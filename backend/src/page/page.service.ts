@@ -10,7 +10,8 @@ export class PageService {
 
   async getPage(title: string): Promise<string> {
     try {
-      return await this.pages.get(title).render();
+      const page = await this.pages.get(title).render();
+      return JSON.stringify({ statusCode: 200, content: page });
     } catch (err) {
       throw new HttpException("Cette page n'existe pas", HttpStatus.NOT_FOUND);
     }
@@ -18,6 +19,7 @@ export class PageService {
 
   async createPage(title: string, content: string): Promise<string> {
     const newPage = await Page.createPage(title, content);
+    this.pages = Page.getPages();
     return await newPage.render();
   }
 

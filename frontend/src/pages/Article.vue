@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { marked } from "marked";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
+import NotFound from "./NotFound.vue";
 
 const props = defineProps<{ title: string }>();
 
@@ -103,9 +104,7 @@ onMounted(async () => {
     <h1>An error happened</h1>
   </div>
   <div v-else-if="status === '404'">
-    <h1>404 page not found</h1>
-    <button v-on:click="createPage">Create {{ title }} page</button>
-    <p></p>
+    <NotFound :title="props.title" :callback="createPage" />
   </div>
   <div v-else class="article-wrapper">
     <div class="article" v-if="mode === 'view'" v-html="html" />

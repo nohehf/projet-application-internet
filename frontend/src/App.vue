@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import DefaultLayout from "./layouts/default-layout.vue";
 import Article from "./pages/Article.vue";
-import E404 from "./pages/E404.vue";
+import NotFound from "./pages/NotFound.vue";
 
 const currentPath = ref(window.location.pathname);
 
@@ -22,7 +22,7 @@ const pageTitle = computed(() => {
 
 <template>
   <DefaultLayout :title="pageTitle">
-    <E404 v-if="currentPath === '/404'" />
+    <NotFound v-if="currentPath === '/404'" :title="'404'" />
     <Article v-else :title="pageTitle" />
   </DefaultLayout>
 </template>

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PageService } from './page.service';
 
 @Controller()
@@ -16,5 +16,13 @@ export class PageController {
     @Body() body: { content: string },
   ): Promise<string> {
     return await this.pageService.createPage(params.name, body.content);
+  }
+
+  @Patch(':name')
+  async updatePage(
+    @Param() params,
+    @Body() body: { content: string },
+  ): Promise<string> {
+    return await this.pageService.updatePage(params.name, body.content);
   }
 }

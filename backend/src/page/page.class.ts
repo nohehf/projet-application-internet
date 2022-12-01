@@ -16,6 +16,15 @@ export class Page {
     return readFileSync(this.path, 'utf8');
   }
 
+  async update(content) {
+    if (!Page.pageExists(this.title)) {
+      throw new Error('Page does not exist');
+    }
+    await writeFile(this.path, content).catch((err) => {
+      throw new Error(err);
+    });
+  }
+
   static getPages(): Map<string, Page> {
     const pages: Map<string, Page> = new Map();
     readdirSync(pagesDir).forEach((file) => {

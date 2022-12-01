@@ -55,7 +55,25 @@ async function renderHtml() {
 }
 
 async function saveEdition() {
-  alert("@TODO: Not implemented yet");
+  status.value = "loading";
+  try {
+    await fetch("http://localhost:3000/" + props.title, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: data.value.content,
+      }),
+    });
+  } catch (e) {
+    status.value = "error";
+    return;
+  } finally {
+    await fetchPage();
+    await renderHtml();
+    status.value = "ok";
+  }
   await switchMode();
 }
 

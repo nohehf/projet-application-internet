@@ -23,8 +23,9 @@ export class PageService {
     return await newPage.render();
   }
 
-  //@TODO
-  updatePage(): string {
-    return 'Hello World!';
+  async updatePage(title: string, content: string): Promise<string> {
+    const page = await this.pages.get(title);
+    page.update(content);
+    return await page.render();
   }
 }

@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { PageController } from './page/page.controller';
-import { PageService } from './page/page.service';
+import { EventsModule } from './events/events.module';
+import { PageModule } from './page/page.module';
 
 @Module({
-  imports: [],
-  controllers: [PageController],
-  providers: [PageService],
+  imports: [EventsModule, PageModule],
 })
 export class AppModule {}

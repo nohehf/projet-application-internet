@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventsGateway } from 'src/events/events.gateway';
 import { Page } from './page.class';
 
 @Injectable()
 export class PageService {
   pages: Map<string, Page> = new Map();
-  constructor() {
+  constructor(private readonly eventsGateway: EventsGateway) {
     this.pages = Page.getPages();
   }
 
@@ -20,12 +21,14 @@ export class PageService {
   async createPage(title: string, content: string): Promise<string> {
     const newPage = await Page.createPage(title, content);
     this.pages = Page.getPages();
+    this.eventsGateway.broadcast('pageCreated', { title });
     return await newPage.render();
   }
 
   async updatePage(title: string, content: string): Promise<string> {
     const page = await this.pages.get(title);
-    page.update(content);
+    await page.update(content);
+    this.eventsGateway.broadcast('pageUpdated', { title });
     return await page.render();
   }
 }

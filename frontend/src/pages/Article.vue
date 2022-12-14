@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { marked } from "marked";
 import MdEditor from "md-editor-v3";
+import Summary from "../components/summary.vue";
 import "md-editor-v3/lib/style.css";
 import NotFound from "./NotFound.vue";
 import { type Socket } from "socket.io-client";
@@ -9,9 +10,14 @@ import { TYPE, useToast } from "vue-toastification";
 const toast = useToast();
 
 const props = defineProps<{ title: string; socket: Socket }>();
-let data = ref<{ statusCode: number; content: string }>({
+let data = ref<{
+  statusCode: number;
+  content: string;
+  summary: { level: number; title: string }[];
+}>({
   content: "",
   statusCode: 0,
+  summary: [],
 });
 let status = ref<"loading" | "ok" | "error" | "404">("loading");
 let html = ref("");
@@ -24,7 +30,7 @@ props.socket.on("connexion", (res) => {
 
 async function fetchPage() {
   try {
-    let res = await fetch("http://localhost:3000/" + props.title);
+    let res = await fetch("http://localhost:3000/page" + props.title);
     data.value = await res.json();
     if (res.status === 404) {
       status.value = "404";
@@ -34,12 +40,25 @@ async function fetchPage() {
   } catch (e) {
     status.value = "error";
   }
+  if (props.title === "/home") {
+    const toc = await fetchToc();
+    data.value.content = data.value.content + toc;
+  }
+}
+
+async function fetchToc() {
+  try {
+    let res = await fetch("http://localhost:3000/toc");
+    return await res.text();
+  } catch (e) {
+    status.value = "error";
+  }
 }
 
 async function createPage() {
   status.value = "loading";
   try {
-    await fetch("http://localhost:3000/" + props.title, {
+    await fetch("http://localhost:3000/page" + props.title, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +84,7 @@ async function renderHtml() {
 async function saveEdition() {
   status.value = "loading";
   try {
-    await fetch("http://localhost:3000/" + props.title, {
+    await fetch("http://localhost:3000/page" + props.title, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -138,10 +157,14 @@ props.socket.on("pageUpdated", async (res: { data: { title: string } }) => {
     />
 
     <div class="sidebar">
-      {{ nClients }} client{{ nClients > 1 ? "s" : "" }} connected.
+      <a href="/" class="home">
+        <button>Home</button>
+      </a>
+      <Summary :summary="data.summary" :page-title="props.title" />
       <button v-on:click="editButtonCallback">
         {{ mode === "edit" ? "Save" : "Edit" }}
       </button>
+      {{ nClients }} client{{ nClients > 1 ? "s" : "" }} connected.
     </div>
   </div>
 </template>
@@ -165,10 +188,14 @@ props.socket.on("pageUpdated", async (res: { data: { title: string } }) => {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    width: 10rem;
+    width: 15rem;
     height: 100%;
     padding: 1rem;
     background-color: rgba(255, 255, 255, 0.2);
+
+    button {
+      width: 100%;
+    }
   }
 }
 </style>

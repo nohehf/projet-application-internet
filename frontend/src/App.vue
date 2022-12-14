@@ -13,9 +13,9 @@ const currentPath = ref(window.location.pathname);
 
 const pageTitle = computed(() => {
   if (currentPath.value === "/") {
-    return "home";
+    return "/home";
   } else {
-    return currentPath.value.replace("/", "");
+    return currentPath.value.replace("/page/", "");
   }
 });
 

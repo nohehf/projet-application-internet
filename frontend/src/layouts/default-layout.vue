@@ -3,7 +3,7 @@
     <slot />
     <div class="bottom-bar">
       <div>Wiki - Savy Hugo - Duclos Eliott - nohehf ®</div>
-      <div>/{{ title }}.md</div>
+      <div>{{ title }}.md</div>
     </div>
   </div>
 </template>

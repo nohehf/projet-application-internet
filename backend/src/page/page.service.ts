@@ -41,7 +41,6 @@ export class PageService {
     Array.from(this.pages.keys()).forEach((key) => {
       toc += `* [${key}](/${key})  \n`;
     });
-    console.log(toc);
     return toc;
   }
 }

@@ -126,6 +126,13 @@ onMounted(async () => {
   renderHtml();
 });
 
+props.socket.on("pageCreated", async (res: { data: { title: string } }) => {
+  if (props.title === "/home") {
+    await fetchToc();
+    renderHtml();
+  }
+});
+
 props.socket.on("pageUpdated", async (res: { data: { title: string } }) => {
   if (res.data.title === props.title) {
     toast(`Current page updated: /${res.data.title}`, { type: TYPE.INFO });

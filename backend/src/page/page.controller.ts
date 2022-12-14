@@ -5,12 +5,17 @@ import { PageService } from './page.service';
 export class PageController {
   constructor(private readonly pageService: PageService) {}
 
-  @Get(':title')
+  @Get('page/:title')
   async getTest(@Param() params): Promise<string> {
     return await this.pageService.getPage(params.title);
   }
 
-  @Post(':name')
+  @Get('toc')
+  async getTOC(): Promise<string> {
+    return await this.pageService.getTOC();
+  }
+
+  @Post('page/:name')
   async createPage(
     @Param() params,
     @Body() body: { content: string },
@@ -18,7 +23,7 @@ export class PageController {
     return await this.pageService.createPage(params.name, body.content);
   }
 
-  @Patch(':name')
+  @Patch('page/:name')
   async updatePage(
     @Param() params,
     @Body() body: { content: string },

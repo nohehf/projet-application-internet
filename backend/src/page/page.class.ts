@@ -12,8 +12,10 @@ export class Page {
     this.path = pagesDir + title + '.md';
   }
 
-  async render(): Promise<string> {
-    return readFileSync(this.path, 'utf8');
+  async render(): Promise<{ content: string; summary: any }> {
+    const content = await readFileSync(this.path, 'utf8');
+    const summary = await this.getSummary(content);
+    return { content, summary };
   }
 
   async update(content) {
@@ -23,6 +25,23 @@ export class Page {
     await writeFile(this.path, content).catch((err) => {
       throw new Error(err);
     });
+  }
+
+  private async getSummary(content: string) {
+    // match this regex: ^#{1,2} (.*) and capture each occurence
+    const regex = /^#{1,2}(.*)/gm;
+    const matches = content.match(regex);
+    const localRegex = /^(#{1,2})(.*)/;
+    const summary = matches.map((match, index) => {
+      const localMatches = match.match(localRegex);
+      const level = localMatches[1].length;
+      const title = localMatches[2].trim();
+      return { level, title };
+    });
+
+    console.log(content);
+    console.dir(matches);
+    return summary;
   }
 
   static getPages(): Map<string, Page> {

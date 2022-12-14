@@ -9,8 +9,9 @@
 </template>
 
 <script setup lang="ts">
+import { Socket } from "socket.io-client";
 import { defineProps } from "vue";
-defineProps<{ title: string }>();
+const props = defineProps<{ title: string; socket: Socket }>();
 </script>
 
 <style lang="scss" scoped>

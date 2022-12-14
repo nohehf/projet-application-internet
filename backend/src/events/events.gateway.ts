@@ -23,10 +23,6 @@ export class EventsGateway {
 
   connectedSockets = new Map<string, Socket>();
 
-  // afterInit() {
-  //   this.server.emit('testing', { do: 'stuff' });
-  // }
-
   handleConnection(socket: Socket) {
     this.connectedSockets.set(socket.id, socket);
     console.dir(socket);
@@ -39,6 +35,6 @@ export class EventsGateway {
   }
 
   broadcast(event: string, data: any) {
-    this.server.emit(event, data);
+    this.server.emit(event, { data });
   }
 }

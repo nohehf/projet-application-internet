@@ -4,9 +4,11 @@ import { marked } from "marked";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import NotFound from "./NotFound.vue";
+import { type Socket } from "socket.io-client";
+import { TYPE, useToast } from "vue-toastification";
+const toast = useToast();
 
-const props = defineProps<{ title: string }>();
-
+const props = defineProps<{ title: string; socket: Socket }>();
 let data = ref<{ statusCode: number; content: string }>({
   content: "",
   statusCode: 0,
@@ -14,6 +16,11 @@ let data = ref<{ statusCode: number; content: string }>({
 let status = ref<"loading" | "ok" | "error" | "404">("loading");
 let html = ref("");
 let mode = ref<"edit" | "view">("view");
+const nClients = ref(0);
+
+props.socket.on("connexion", (res) => {
+  nClients.value = res.nClients;
+});
 
 async function fetchPage() {
   try {
@@ -94,6 +101,16 @@ onMounted(async () => {
   await fetchPage();
   renderHtml();
 });
+
+props.socket.on("pageUpdated", async (res: { data: { title: string } }) => {
+  if (res.data.title === props.title) {
+    toast(`Current page updated: /${res.data.title}`, { type: TYPE.INFO });
+    await fetchPage();
+    renderHtml();
+  } else {
+    toast(`Page updated: /${res.data.title}`, { type: TYPE.INFO });
+  }
+});
 </script>
 
 <template>
@@ -121,6 +138,7 @@ onMounted(async () => {
     />
 
     <div class="sidebar">
+      {{ nClients }} client{{ nClients > 1 ? "s" : "" }} connected.
       <button v-on:click="editButtonCallback">
         {{ mode === "edit" ? "Save" : "Edit" }}
       </button>

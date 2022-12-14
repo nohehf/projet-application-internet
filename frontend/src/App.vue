@@ -3,13 +3,13 @@ import { ref, computed } from "vue";
 import DefaultLayout from "./layouts/default-layout.vue";
 import Article from "./pages/Article.vue";
 import NotFound from "./pages/NotFound.vue";
+import { io } from "socket.io-client";
+import { TYPE, useToast } from "vue-toastification";
+const toast = useToast();
+
+const socket = io("ws://localhost:4242");
 
 const currentPath = ref(window.location.pathname);
-
-// window.addEventListener("hashchange", () => {
-//   console.log("hashchange", window.location.pathname);
-//   currentPath.value = window.location.pathname;
-// });
 
 const pageTitle = computed(() => {
   if (currentPath.value === "/") {
@@ -18,12 +18,16 @@ const pageTitle = computed(() => {
     return currentPath.value.replace("/", "");
   }
 });
+
+socket.on("pageCreated", (res) => {
+  toast(`New page created: /${res.title}`, { type: TYPE.INFO });
+});
 </script>
 
 <template>
-  <DefaultLayout :title="pageTitle">
+  <DefaultLayout :title="pageTitle" :socket="socket">
     <NotFound v-if="currentPath === '/404'" :title="'404'" />
-    <Article v-else :title="pageTitle" />
+    <Article v-else :title="pageTitle" :socket="socket" />
   </DefaultLayout>
 </template>
 

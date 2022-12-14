@@ -7,6 +7,7 @@ import "md-editor-v3/lib/style.css";
 import NotFound from "./NotFound.vue";
 import { type Socket } from "socket.io-client";
 import { TYPE, useToast } from "vue-toastification";
+import { computed } from "@vue/reactivity";
 const toast = useToast();
 
 const props = defineProps<{ title: string; socket: Socket }>();
@@ -21,11 +22,16 @@ let data = ref<{
 });
 let status = ref<"loading" | "ok" | "error" | "404">("loading");
 let html = ref("");
+let toc = ref("");
 let mode = ref<"edit" | "view">("view");
 const nClients = ref(0);
 
 props.socket.on("connexion", (res) => {
   nClients.value = res.nClients;
+});
+
+const contentWithToc = computed(() => {
+  return data.value.content + toc.value;
 });
 
 async function fetchPage() {
@@ -41,15 +47,14 @@ async function fetchPage() {
     status.value = "error";
   }
   if (props.title === "/home") {
-    const toc = await fetchToc();
-    data.value.content = data.value.content + toc;
+    await fetchToc();
   }
 }
 
 async function fetchToc() {
   try {
     let res = await fetch("http://localhost:3000/toc");
-    return await res.text();
+    toc.value = await res.text();
   } catch (e) {
     status.value = "error";
   }
@@ -78,7 +83,7 @@ async function createPage() {
 }
 
 async function renderHtml() {
-  html.value = await marked.parse(data.value.content);
+  html.value = await marked.parse(contentWithToc.value);
 }
 
 async function saveEdition() {

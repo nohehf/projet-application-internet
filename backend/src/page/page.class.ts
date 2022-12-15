@@ -39,8 +39,6 @@ export class Page {
       return { level, title };
     });
 
-    console.log(content);
-    console.dir(matches);
     return summary;
   }
 

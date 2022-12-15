@@ -10,15 +10,17 @@ Lors de l'ouverture d'une page '/exemplepage', si celle ci n'existe pas, l'utili
 
 ## Back-end 
 
-Le back end de l'application a été crée en utilisant FeatherJS. Il met en place un API REST des différentes pages du wiki, ressources au sens REST. 
+Le back end de l'application a été crée en utilisant NestJS. Le framework ressemble beaucoup à FeathersJS (vu en cours). Il met en place un API REST des différentes pages du wiki, ressources au sens REST.  
+Pour plus d'information voici la documentation de NEST, que l'on vous invite vivement à consulter: https://nestjs.com/
 
 ## Front-end 
 
 Réalisé : 
-- Utilisation de VueJS 3 pour développer le front-end et mettre en oeuvre les modes création, édition et visualisation. 
-- L'application est responsive (elle s'adapte à la largeur de l'écran).
+- Vite pour Bootstraper, packager et le dev-server  
+- Utilisation de VueJS 3 pour développer le front-end et mettre en oeuvre les modes création, édition et visualisation.  
+- L'application est responsive (elle s'adapte à la largeur de l'écran). 
 - L'impression de la page fait apparaitre le contenu markdown traité et non brut(raw).
-- (Optionnel) L'application utilise des web-sockets, ce qui permet aux modifications effectué de se mettre à jour en temps réel sur les autres pages ouvertes. 
+- L'application utilise des web-sockets, ce qui permet aux modifications effectué de se mettre à jour en temps réel sur les autres pages ouvertes. Cela permet aussi de voir le nombre de clients connectés en temps réel, ainsi que de mettre à jour la liste des articles disponibles sur la homepage.
 
 Non réalisé : 
 - (Optionnel) Déploiement en production sur un cloud, VPS ou un environnement gratuit.

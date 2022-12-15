@@ -25,7 +25,6 @@ export class EventsGateway {
 
   handleConnection(socket: Socket) {
     this.connectedSockets.set(socket.id, socket);
-    // console.dir(socket);
     this.server.emit('connexion', { nClients: this.connectedSockets.size });
   }
 

@@ -134,7 +134,7 @@ props.socket.on("pageCreated", async (res: { data: { title: string } }) => {
 });
 
 props.socket.on("pageUpdated", async (res: { data: { title: string } }) => {
-  if (res.data.title === props.title) {
+  if ("/" + res.data.title === props.title) {
     toast.clear();
     toast(`Current page updated: /${res.data.title}`, { type: TYPE.INFO });
     await fetchPage();

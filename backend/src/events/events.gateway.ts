@@ -16,11 +16,6 @@ export class EventsGateway {
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('events')
-  findAll(@MessageBody() data: any): string {
-    return 'test';
-  }
-
   connectedSockets = new Map<string, Socket>();
 
   handleConnection(socket: Socket) {

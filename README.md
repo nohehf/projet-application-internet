@@ -28,7 +28,8 @@ Non réalisé :
 Lien Youtube : *
 
 ## Requirements
--NodeJS 18 or higher 
+-NodeJS 18 or higher  
+
 -Yarn 1.22.x or higher 
 
 ## Yarn

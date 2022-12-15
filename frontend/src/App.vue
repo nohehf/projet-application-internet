@@ -21,7 +21,7 @@ const pageTitle = computed(() => {
 
 socket.on("pageCreated", (res) => {
   toast.clear();
-  toast(`New page created: /${res.title}`, { type: TYPE.INFO });
+  toast(`New page created: /${res.data.title}`, { type: TYPE.INFO });
 });
 </script>
 
